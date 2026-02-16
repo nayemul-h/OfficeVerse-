@@ -14,8 +14,8 @@ import java.util.Map;
 public class genAIService {
 
     // Runtime API key (can be set dynamically)
-    private String runtimeApiKey;
-    
+    private String runtimeApiKey = "";
+
     // Provider (openai, huggingface, etc.)
     private String provider = "openai";
 
@@ -25,16 +25,17 @@ public class genAIService {
     @Value("${genai.huggingface.model:mistralai/Mistral-7B-Instruct}")
     private String modelName;
 
-    // Note: Hugging Face free inference API (api-inference.huggingface.co) has been deprecated
+    // Note: Hugging Face free inference API (api-inference.huggingface.co) has been
+    // deprecated
     // For production, users should either:
     // 1. Use Hugging Face Paid Inference Endpoints
     // 2. Deploy their own inference server
     // 3. Use alternative AI APIs (OpenAI, Anthropic, etc.)
     // This is a fallback endpoint - may need updating based on current HF offerings
     private static final String HF_INFERENCE_ENDPOINT = "https://api-inference.huggingface.co/models/";
-    
-    // OpenAI API endpoint
-    private static final String OPENAI_ENDPOINT = "https://api.openai.com/v1/chat/completions";
+
+    // OpenAI/DeepSeek API endpoint
+    private static final String OPENAI_ENDPOINT = "https://api.deepseek.com/chat/completions";
 
     private final RestTemplate restTemplate = new RestTemplate();
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -80,7 +81,7 @@ public class genAIService {
             if (apiKey == null || apiKey.isEmpty()) {
                 throw new RuntimeException("No API key configured. Please configure an API key first.");
             }
-            
+
             if ("openai".equalsIgnoreCase(provider)) {
                 return queryOpenAI(prompt, apiKey);
             } else {
@@ -100,9 +101,9 @@ public class genAIService {
         headers.set("Authorization", "Bearer " + apiKey);
 
         Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("model", "gpt-3.5-turbo");
-        requestBody.put("messages", new Object[]{
-            Map.of("role", "user", "content", prompt)
+        requestBody.put("model", "deepseek-chat");
+        requestBody.put("messages", new Object[] {
+                Map.of("role", "user", "content", prompt)
         });
         requestBody.put("temperature", 0.7);
         requestBody.put("max_tokens", 500);
@@ -115,13 +116,13 @@ public class genAIService {
             return parseOpenAIResponse(response);
         } catch (org.springframework.web.client.HttpClientErrorException e) {
             int status = e.getStatusCode().value();
-            
+
             if (status == 401) {
                 throw new Exception("Invalid OpenAI API key");
             } else if (status == 429) {
                 throw new Exception("Rate limit exceeded. Please try again later.");
             }
-            
+
             String errorMsg = "OpenAI API Error: " + e.getStatusCode() + " - " + e.getResponseBodyAsString();
             System.err.println(errorMsg);
             throw new Exception(errorMsg);
@@ -175,14 +176,14 @@ public class genAIService {
         } catch (org.springframework.web.client.HttpClientErrorException e) {
             // Handle specific error cases
             int status = e.getStatusCode().value();
-            
+
             if (status == 410) {
                 String message = "Hugging Face free inference API has been deprecated. " +
-                    "Please use a paid inference endpoint or alternative AI service.";
+                        "Please use a paid inference endpoint or alternative AI service.";
                 System.err.println(message);
                 throw new Exception(message);
             }
-            
+
             // Provide more detailed error information
             String errorMsg = "Hugging Face API Error: " + e.getStatusCode() + " - " + e.getResponseBodyAsString();
             System.err.println(errorMsg);
@@ -243,18 +244,18 @@ public class genAIService {
         try {
             // Call a simple OpenAI endpoint to validate
             String response = restTemplate.exchange(
-                "https://api.openai.com/v1/models", 
-                org.springframework.http.HttpMethod.GET,
-                entity,
-                String.class
-            ).getBody();
-            
+                    "https://api.openai.com/v1/models",
+                    org.springframework.http.HttpMethod.GET,
+                    entity,
+                    String.class).getBody();
+
             return response != null && !response.isEmpty();
         } catch (org.springframework.web.client.HttpClientErrorException e) {
             if (e.getStatusCode().value() == 401) {
                 return false; // Invalid key
             }
-            // Other errors might still mean the API is accessible but we're having network issues
+            // Other errors might still mean the API is accessible but we're having network
+            // issues
             return false;
         }
     }
@@ -270,12 +271,11 @@ public class genAIService {
 
         try {
             String response = restTemplate.exchange(
-                "https://api-inference.huggingface.co/models/" + modelName,
-                org.springframework.http.HttpMethod.GET,
-                entity,
-                String.class
-            ).getBody();
-            
+                    "https://api-inference.huggingface.co/models/" + modelName,
+                    org.springframework.http.HttpMethod.GET,
+                    entity,
+                    String.class).getBody();
+
             return response != null && !response.isEmpty();
         } catch (org.springframework.web.client.HttpClientErrorException e) {
             if (e.getStatusCode().value() == 401) {
@@ -302,11 +302,11 @@ public class genAIService {
         status.put("model", modelName);
         status.put("provider", provider);
         status.put("configured", isConfigured());
-        
+
         if ("openai".equalsIgnoreCase(provider)) {
             status.put("model", "gpt-3.5-turbo");
         }
-        
+
         return status;
     }
 }
