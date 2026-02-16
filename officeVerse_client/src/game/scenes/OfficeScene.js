@@ -79,7 +79,7 @@ export default class OfficeScene extends Phaser.Scene {
                         copyBtn.classList.add('copied');
                         copyBtn.innerHTML = '<span>✓ Copied</span>'; // Change text to show success
                         this.showPopup('Office code copied to clipboard! 📋');
-                        
+
                         // Completely remove from DOM after showing success
                         setTimeout(() => {
                             copyBtn.style.opacity = '0';
@@ -112,7 +112,7 @@ export default class OfficeScene extends Phaser.Scene {
 
         /* ---------------- PLAYER ---------------- */
         const idleSprite = this.characterConfigs[this.myPlayerCharacter].idle;
-        this.player = this.physics.add.sprite(64, 64, idleSprite, 0);
+        this.player = this.physics.add.sprite(200, 430, idleSprite, 0);
         this.player.setScale(1.25);
         this.player.setTint(this.myPlayerSkin);
         this.player.characterType = this.myPlayerCharacter;
@@ -268,10 +268,14 @@ export default class OfficeScene extends Phaser.Scene {
         body.setVelocity(0);
         let moving = false;
 
-        if (this.cursors.left.isDown) { body.setVelocityX(-speed); this.player.setFlipX(true); moving = true; }
-        else if (this.cursors.right.isDown) { body.setVelocityX(speed); this.player.setFlipX(false); moving = true; }
-        if (this.cursors.up.isDown) { body.setVelocityY(-speed); moving = true; }
-        else if (this.cursors.down.isDown) { body.setVelocityY(speed); moving = true; }
+        const isTyping = document.activeElement && (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA');
+
+        if (!isTyping) {
+            if (this.cursors.left.isDown) { body.setVelocityX(-speed); this.player.setFlipX(true); moving = true; }
+            else if (this.cursors.right.isDown) { body.setVelocityX(speed); this.player.setFlipX(false); moving = true; }
+            if (this.cursors.up.isDown) { body.setVelocityY(-speed); moving = true; }
+            else if (this.cursors.down.isDown) { body.setVelocityY(speed); moving = true; }
+        }
 
         if (moving) this.energy = Math.max(0, this.energy - (ratePerSec * deltaSeconds));
 
@@ -290,7 +294,7 @@ export default class OfficeScene extends Phaser.Scene {
 
         // Network
         this.lastSent = this.lastSent || 0;
-        if (time > this.lastSent + 50 && (moving || time > this.lastSent + 1000)) {
+        if (time > this.lastSent + 30 && (moving || time > this.lastSent + 1000)) {
             const flipXVal = this.player.flipX ? 1 : 0;
             const anim = moving ? 'walk' : 'idle';
             sendMovement(`${this.roomId}:${this.myPlayerId}:${Math.round(this.player.x)}:${Math.round(this.player.y)}:${this.myPlayerName.replace(/:/g, '')}:${this.myPlayerSkin}:${this.myPlayerCharacter}:${anim}:${flipXVal}`);
@@ -304,8 +308,10 @@ export default class OfficeScene extends Phaser.Scene {
             this.zonePrompt.setDepth(this.player.y + 2000);
         }
 
-        if (Phaser.Input.Keyboard.JustDown(this.fKey)) this.handleZoneInteraction();
-        if (Phaser.Input.Keyboard.JustDown(this.eKey)) this.handlePlayerInteraction();
+        if (!isTyping) {
+            if (Phaser.Input.Keyboard.JustDown(this.fKey)) this.handleZoneInteraction();
+            if (Phaser.Input.Keyboard.JustDown(this.eKey)) this.handlePlayerInteraction();
+        }
     }
 
     updatePlayerBars() {
@@ -370,7 +376,7 @@ export default class OfficeScene extends Phaser.Scene {
                     p.sprite.setFlipX(flip);
                     if (p.tween) p.tween.stop();
                     p.tween = this.tweens.add({
-                        targets: [p.sprite, p.label], x: x, y: { value: y, duration: 100 },
+                        targets: [p.sprite, p.label], x: x, y: { value: y, duration: 40 },
                         onUpdate: () => { p.sprite.setDepth(p.sprite.y); p.label.setPosition(p.sprite.x, p.sprite.y - 40); p.label.setDepth(p.sprite.y + 1000); }
                     });
                 }
@@ -456,7 +462,7 @@ export default class OfficeScene extends Phaser.Scene {
         if (!this.currentZone) return;
         switch (this.currentZone) {
             case 'lobby': this.executiveUI.showFeaturesPopup(); break;
-            case 'meetingRoom': window.open('https://meet.google.com/new', '_blank'); break;
+            case 'meetingRoom': window.open('https://meet.google.com/', '_blank'); break;
             case 'genAI': this.genAIUI.openGenAIPanel(); break;
             case 'gaming': window.open('https://poki.com/', '_blank'); break;
             case 'exit': if (confirm('Leave office?')) window.location.reload(); break;
@@ -469,7 +475,13 @@ export default class OfficeScene extends Phaser.Scene {
                     this.showPopup('Access Denied: Only the Boss can enter! 🚫');
                 }
                 break;
-            case 'executive': this.executiveUI.openExecutivePanel(); break;
+            case 'executive':
+                if (this.playerRole === 'boss') {
+                    this.executiveUI.openExecutivePanel();
+                } else {
+                    this.showPopup('Access Denied: Executives Only! 💎');
+                }
+                break;
             default:
                 if (this.currentZone.match(/^d[1-6]$/)) {
                     this.todoUI.openTodo(this.currentZone);

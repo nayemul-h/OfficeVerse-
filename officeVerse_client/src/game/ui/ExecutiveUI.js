@@ -86,22 +86,22 @@ export default class ExecutiveUI {
                 };
             }
 
-            const coming1Btn = document.getElementById('feature-coming1');
-            if (coming1Btn) {
-                coming1Btn.onclick = (e) => {
+            const prothomAloBtn = document.getElementById('feature-prothomalo');
+            if (prothomAloBtn) {
+                prothomAloBtn.onclick = (e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    alert('Coming Soon! 🚀');
+                    window.open('https://www.prothomalo.com/', '_blank');
                     overlay.style.display = 'none';
                 };
             }
 
-            const coming2Btn = document.getElementById('feature-coming2');
-            if (coming2Btn) {
-                coming2Btn.onclick = (e) => {
+            const kalerKanthoBtn = document.getElementById('feature-kalerkantho');
+            if (kalerKanthoBtn) {
+                kalerKanthoBtn.onclick = (e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    alert('Coming Soon! 🚀');
+                    window.open('https://www.kalerkantho.com/', '_blank');
                     overlay.style.display = 'none';
                 };
             }
