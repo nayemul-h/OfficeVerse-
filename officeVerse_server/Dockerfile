@@ -33,4 +33,4 @@ COPY --from=build /app/build/libs/*.jar app.jar
 EXPOSE 8080
 
 # Use environment variables to configure the app at runtime
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-XX:MaxRAMPercentage=75.0", "-XX:+ExitOnOutOfMemoryError", "-jar", "app.jar"]
