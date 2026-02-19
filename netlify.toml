@@ -1,0 +1,15 @@
+# Netlify configuration for OfficeVerse Frontend (Vite + Phaser)
+
+[build]
+  # Directory containing the source code (relative to the root)
+  base = "officeVerse_client"
+  # Command to build the production bundle
+  command = "npm install && npm run build"
+  # Directory the built files will be published from
+  publish = "dist"
+
+# SPA fallback — routes all requests to index.html so in-game navigation works
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
