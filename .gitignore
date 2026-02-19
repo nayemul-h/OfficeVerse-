@@ -30,6 +30,7 @@ build/
 **/bin/
 **/*.class
 **/*.jar
+!**/gradle-wrapper.jar
 **/*.war
 **/*.ear
 
