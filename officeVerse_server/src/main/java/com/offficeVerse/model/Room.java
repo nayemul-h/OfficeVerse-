@@ -9,7 +9,6 @@ import java.util.*;
 
 @Getter
 @Setter
-// @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "rooms")
 public class Room {
@@ -34,11 +33,9 @@ public class Room {
         @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
         private List<ChatMessage> messages = new ArrayList<>();
 
-        @ElementCollection
-        @CollectionTable(name = "room_ready_status", joinColumns = @JoinColumn(name = "room_id"))
-        @MapKeyJoinColumn(name = "player_id")
-        @Column(name = "is_ready")
-        private Map<Player, Boolean> readyStatus = new HashMap<>();
+        // Stored in memory only (not persisted) — player ID -> ready status
+        @Transient
+        private Map<Long, Boolean> readyStatus = new HashMap<>();
 
         private LocalDateTime createdAt = LocalDateTime.now();
 
