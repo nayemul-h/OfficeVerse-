@@ -23,38 +23,67 @@ public class DataSourceConfig {
     @Bean
     @Primary
     public DataSource dataSource() {
-        logger.info("Initializing Custom DataSource for Production Profile");
+        logger.info("Initializing Hardened Custom DataSource for Production Profile");
 
-        // Use System.getenv to get the raw value, bypassing Spring property resolution
-        // if possible
         String rawEnvUrl = System.getenv("DATABASE_URL");
         if (rawEnvUrl == null) {
-            rawEnvUrl = databaseUrl; // Fallback to @Value
+            rawEnvUrl = databaseUrl;
         }
 
-        // Aggressively clean the URL: trim and remove all non-printable characters
-        String cleanUrl = rawEnvUrl != null ? rawEnvUrl.trim().replaceAll("[^\\x20-\\x7E]", "") : "";
-        logger.info("Sanitized Database URL (length: {})", cleanUrl.length());
+        // 1. Aggressive cleaning of all whitespace and non-printables
+        String cleanRaw = rawEnvUrl != null ? rawEnvUrl.trim().replaceAll("[^\\x20-\\x7E]", "") : "";
 
-        // Standardize the protocol
-        // Neon sometimes provides postgres://, but JDBC requires jdbc:postgresql://
-        if (cleanUrl.startsWith("jdbc:postgresql://")) {
-            // Already perfect
-        } else if (cleanUrl.startsWith("jdbc:postgres://")) {
-            cleanUrl = cleanUrl.replace("jdbc:postgres://", "jdbc:postgresql://");
-        } else if (cleanUrl.startsWith("postgresql://")) {
-            cleanUrl = "jdbc:" + cleanUrl;
-        } else if (cleanUrl.startsWith("postgres://")) {
-            cleanUrl = "jdbc:postgresql://" + cleanUrl.substring(11);
-        } else {
-            // If it's just host:port/db or similar, assume postgresql
-            if (!cleanUrl.isEmpty() && !cleanUrl.startsWith("jdbc:")) {
-                cleanUrl = "jdbc:postgresql://" + cleanUrl;
+        String dbUser = null;
+        String dbPass = null;
+        String jdbcUrl = cleanRaw;
+
+        try {
+            // Support formats like postgresql://user:pass@host:port/db
+            String authorityAndPath = cleanRaw;
+            if (authorityAndPath.contains("://")) {
+                authorityAndPath = authorityAndPath.substring(authorityAndPath.indexOf("://") + 3);
             }
+
+            if (authorityAndPath.contains("@")) {
+                String[] authParts = authorityAndPath.split("@", 2);
+                String userPass = authParts[0];
+                String remaining = authParts[1];
+
+                if (userPass.contains(":")) {
+                    String[] up = userPass.split(":", 2);
+                    dbUser = up[0];
+                    dbPass = up[1];
+                } else {
+                    dbUser = userPass;
+                }
+
+                // Construct clean JDBC URL without credentials
+                jdbcUrl = "jdbc:postgresql://" + remaining;
+            } else {
+                // Handle missing prefixes
+                if (!cleanRaw.startsWith("jdbc:postgresql:")) {
+                    if (cleanRaw.startsWith("postgresql://")) {
+                        jdbcUrl = "jdbc:" + cleanRaw;
+                    } else if (cleanRaw.startsWith("postgres://")) {
+                        jdbcUrl = "jdbc:postgresql://" + cleanRaw.substring(11);
+                    } else {
+                        jdbcUrl = "jdbc:postgresql://" + cleanRaw;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            logger.error("Error parsing DATABASE_URL: {}", e.getMessage());
         }
+
+        logger.info("Final JDBC URL: {}", jdbcUrl);
 
         HikariDataSource dataSource = new HikariDataSource();
-        dataSource.setJdbcUrl(cleanUrl);
+        dataSource.setJdbcUrl(jdbcUrl);
+        if (dbUser != null)
+            dataSource.setUsername(dbUser);
+        if (dbPass != null)
+            dataSource.setPassword(dbPass);
+
         dataSource.setDriverClassName("org.postgresql.Driver");
 
         // Apply memory-saving settings
@@ -65,8 +94,10 @@ public class DataSourceConfig {
         dataSource.setMaxLifetime(1800000);
         dataSource.setLeakDetectionThreshold(2000);
 
-        logger.info("DataSource configured successfully with URL: {}...",
-                cleanUrl.substring(0, Math.min(cleanUrl.length(), 30)));
+        // Neon-specific SSL
+        dataSource.addDataSourceProperty("ssl", "true");
+        dataSource.addDataSourceProperty("sslmode", "require");
+
         return dataSource;
     }
 }
