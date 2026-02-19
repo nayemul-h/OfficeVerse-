@@ -24,21 +24,40 @@ public class DataSourceConfig {
     @Primary
     public DataSource dataSource() {
         logger.info("Initializing Custom DataSource for Production Profile");
-        HikariDataSource dataSource = new HikariDataSource();
 
-        // Trim whitespace from the URL - critical for Render env vars
-        String cleanUrl = databaseUrl != null ? databaseUrl.trim() : "";
-        logger.info("Using Database URL (trimmed, length: {})", cleanUrl.length());
-
-        // Ensure jdbc: prefix is present (and not double-prefixed)
-        if (!cleanUrl.startsWith("jdbc:")) {
-            cleanUrl = "jdbc:" + cleanUrl;
+        // Use System.getenv to get the raw value, bypassing Spring property resolution
+        // if possible
+        String rawEnvUrl = System.getenv("DATABASE_URL");
+        if (rawEnvUrl == null) {
+            rawEnvUrl = databaseUrl; // Fallback to @Value
         }
 
+        // Aggressively clean the URL: trim and remove all non-printable characters
+        String cleanUrl = rawEnvUrl != null ? rawEnvUrl.trim().replaceAll("[^\\x20-\\x7E]", "") : "";
+        logger.info("Sanitized Database URL (length: {})", cleanUrl.length());
+
+        // Standardize the protocol
+        // Neon sometimes provides postgres://, but JDBC requires jdbc:postgresql://
+        if (cleanUrl.startsWith("jdbc:postgresql://")) {
+            // Already perfect
+        } else if (cleanUrl.startsWith("jdbc:postgres://")) {
+            cleanUrl = cleanUrl.replace("jdbc:postgres://", "jdbc:postgresql://");
+        } else if (cleanUrl.startsWith("postgresql://")) {
+            cleanUrl = "jdbc:" + cleanUrl;
+        } else if (cleanUrl.startsWith("postgres://")) {
+            cleanUrl = "jdbc:postgresql://" + cleanUrl.substring(11);
+        } else {
+            // If it's just host:port/db or similar, assume postgresql
+            if (!cleanUrl.isEmpty() && !cleanUrl.startsWith("jdbc:")) {
+                cleanUrl = "jdbc:postgresql://" + cleanUrl;
+            }
+        }
+
+        HikariDataSource dataSource = new HikariDataSource();
         dataSource.setJdbcUrl(cleanUrl);
         dataSource.setDriverClassName("org.postgresql.Driver");
 
-        // Apply memory-saving settings programmatically
+        // Apply memory-saving settings
         dataSource.setMaximumPoolSize(3);
         dataSource.setMinimumIdle(1);
         dataSource.setIdleTimeout(300000);
@@ -46,6 +65,8 @@ public class DataSourceConfig {
         dataSource.setMaxLifetime(1800000);
         dataSource.setLeakDetectionThreshold(2000);
 
+        logger.info("DataSource configured successfully with URL: {}...",
+                cleanUrl.substring(0, Math.min(cleanUrl.length(), 30)));
         return dataSource;
     }
 }
