@@ -4,23 +4,21 @@
 FROM eclipse-temurin:21-jdk-alpine AS build
 WORKDIR /app
 
-# Copy gradle files first for layer caching
-COPY gradlew .
-COPY gradle gradle
+# Install Gradle directly (avoids needing gradle-wrapper.jar)
+RUN apk add --no-cache gradle
+
+# Copy Gradle configuration first for layer caching
 COPY build.gradle .
 COPY settings.gradle .
 
-# Make gradlew executable
-RUN chmod +x ./gradlew
-
-# Download dependencies (cached layer)
-RUN ./gradlew dependencies --no-daemon || true
+# Download dependencies as a separate cached layer
+RUN gradle dependencies --no-daemon || true
 
 # Copy source code
 COPY src src
 
 # Build the fat JAR, skipping tests for faster Docker builds
-RUN ./gradlew bootJar --no-daemon -x test
+RUN gradle bootJar --no-daemon -x test
 
 # ============================
 # Stage 2: Run
