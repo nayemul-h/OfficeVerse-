@@ -6,6 +6,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 
@@ -13,16 +15,20 @@ import javax.sql.DataSource;
 @Profile("prod")
 public class DataSourceConfig {
 
+    private static final Logger logger = LoggerFactory.getLogger(DataSourceConfig.class);
+
     @Value("${DATABASE_URL}")
     private String databaseUrl;
 
     @Bean
     @Primary
     public DataSource dataSource() {
+        logger.info("Initializing Custom DataSource for Production Profile");
         HikariDataSource dataSource = new HikariDataSource();
 
         // Trim whitespace from the URL - critical for Render env vars
         String cleanUrl = databaseUrl != null ? databaseUrl.trim() : "";
+        logger.info("Using Database URL (trimmed, length: {})", cleanUrl.length());
 
         // Ensure jdbc: prefix is present (and not double-prefixed)
         if (!cleanUrl.startsWith("jdbc:")) {
