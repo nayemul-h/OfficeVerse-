@@ -8,24 +8,18 @@ export default class TodoUI {
         const closeBtn = document.getElementById('close-todo-btn');
         if (closeBtn) closeBtn.onclick = () => this.closeTodo();
 
-        const clearBtn = document.getElementById('clear-todo-btn');
-        if (clearBtn) {
-            clearBtn.onclick = () => {
-                if (this.scene.activeDesk) {
-                    this.scene.todoManager.clearCompletedTasks(this.scene.activeDesk);
-                    this.renderTodos();
-                }
-            };
-        }
-
         const addBtn = document.getElementById('add-todo-btn');
         if (addBtn) addBtn.onclick = () => this.addTodo();
 
         const input = document.getElementById('todo-input');
         if (input) {
-            input.onkeydown = (e) => {
+            // Stop Phaser from capturing keyboard events while typing
+            input.addEventListener('keydown', (e) => {
+                e.stopPropagation();
                 if (e.key === 'Enter') this.addTodo();
-            };
+            });
+            input.addEventListener('keyup', (e) => e.stopPropagation());
+            input.addEventListener('keypress', (e) => e.stopPropagation());
         }
     }
 
@@ -68,6 +62,7 @@ export default class TodoUI {
 
         list.innerHTML = '';
         const tasks = this.scene.todoManager.getTasks(this.scene.activeDesk);
+        const isBoss = this.scene.playerRole === 'boss';
 
         if (tasks.length === 0) {
             this.updateEmptyState(true);
@@ -82,12 +77,17 @@ export default class TodoUI {
             if (task.completed) completedCount++;
             const li = document.createElement('li');
             li.className = `todo-item ${task.completed ? 'completed' : ''} ${task.immutable ? 'is-boss-task' : ''}`;
-            
+
             const bossBadge = task.immutable ? '<span class="boss-badge">👑 Boss</span>' : '';
             // Only show edit icon for personal tasks
             const editIconHtml = !task.immutable ? '<span class="edit-icon" title="Click to edit">✎</span>' : '';
             const taskTitle = !task.immutable ? 'Double click to edit' : 'Boss Task';
-            
+
+            // Show delete (×) button:
+            // - Boss can delete ANY task (including boss-assigned)
+            // - Employee can only delete their own (non-immutable) tasks
+            const canDelete = isBoss || !task.immutable;
+
             li.innerHTML = `
                 <div class="todo-check-wrapper">
                     <input type="checkbox" ${task.completed ? 'checked' : ''}>
@@ -99,14 +99,14 @@ export default class TodoUI {
                     </div>
                     ${bossBadge}
                 </div>
-                <button class="delete-task-btn" ${task.immutable ? 'style="display:none"' : ''} title="Delete Task">&times;</button>
+                <button class="delete-task-btn" ${canDelete ? '' : 'style="display:none"'} title="Delete Task">&times;</button>
             `;
 
             const textSpan = li.querySelector('.todo-text');
             const editIcon = li.querySelector('.edit-icon');
-            
+
             const handleEdit = () => {
-                if (task.immutable) return; // Guard clause for extra safety
+                if (task.immutable) return;
                 const newText = prompt('Edit task:', task.text);
                 if (newText !== null && newText.trim() !== '') {
                     this.scene.todoManager.editTask(this.scene.activeDesk, task.id, newText.trim());
@@ -122,11 +122,21 @@ export default class TodoUI {
                 this.renderTodos();
             };
 
-            if (!task.immutable) {
+            if (canDelete) {
                 const deleteBtn = li.querySelector('.delete-task-btn');
                 if (deleteBtn) {
                     deleteBtn.onclick = () => {
-                        this.scene.todoManager.deleteTask(this.scene.activeDesk, task.id);
+                        if (isBoss && task.immutable) {
+                            // Boss removing a boss task — sync removal to all clients
+                            this.scene.todoManager.deleteTaskByBoss(this.scene.activeDesk, task.id);
+                            // Broadcast removal so employees see it too
+                            if (window.sendGlobalMessage) {
+                                window.sendGlobalMessage(`BOSS_TASK_REMOVE:${this.scene.activeDesk}:${task.id}`);
+                            }
+                        } else {
+                            // Normal employee delete (own task only)
+                            this.scene.todoManager.deleteTask(this.scene.activeDesk, task.id);
+                        }
                         this.renderTodos();
                     };
                 }
@@ -141,7 +151,7 @@ export default class TodoUI {
         const statTotal = document.getElementById('stat-total');
         const statCompleted = document.getElementById('stat-completed');
         const statProgress = document.getElementById('stat-progress');
-        
+
         if (statTotal) statTotal.textContent = total;
         if (statCompleted) statCompleted.textContent = completed;
         if (statProgress) {

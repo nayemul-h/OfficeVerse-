@@ -11,21 +11,40 @@ export default class TodoManager {
     addTask(deskId, text, isImmutable = false) {
         if (!this.todos[deskId]) this.todos[deskId] = [];
         const newTask = {
-            id: Date.now() + Math.random(), // Unique ID even for simultaneous tasks
+            id: Date.now() + Math.random(),
             text: text,
             completed: false,
-            immutable: isImmutable // New: boss tasks cannot be deleted
+            immutable: isImmutable
         };
         this.todos[deskId].push(newTask);
         this.save();
-        return newTask;
+        return newTask; // returns the task so caller can get the ID
     }
 
+    // Add a task with a specific ID (used by employees receiving boss broadcast)
+    addTaskWithId(deskId, taskId, text, isImmutable = false) {
+        if (!this.todos[deskId]) this.todos[deskId] = [];
+        // Avoid duplicates if message arrives twice
+        if (this.todos[deskId].find(t => t.id === taskId)) return;
+        const newTask = {
+            id: taskId,
+            text: text,
+            completed: false,
+            immutable: isImmutable
+        };
+        this.todos[deskId].push(newTask);
+        this.save();
+    }
+
+    // Assign a task to ALL desks — returns array of {deskId, taskId} for broadcast
     assignGlobalTask(text) {
         const desks = ['d1', 'd2', 'd3', 'd4', 'd5', 'd6'];
+        const assignments = [];
         desks.forEach(desk => {
-            this.addTask(desk, text, true);
+            const task = this.addTask(desk, text, true);
+            assignments.push({ deskId: desk, taskId: task.id });
         });
+        return assignments;
     }
 
     toggleTask(deskId, taskId) {
@@ -46,6 +65,7 @@ export default class TodoManager {
         }
     }
 
+    // Employee delete — only non-immutable tasks
     deleteTask(deskId, taskId) {
         if (!this.todos[deskId]) return;
         const task = this.todos[deskId].find(t => t.id === taskId);
@@ -57,9 +77,10 @@ export default class TodoManager {
         this.save();
     }
 
-    clearCompletedTasks(deskId) {
+    // Boss delete — can remove any task including immutable boss tasks
+    deleteTaskByBoss(deskId, taskId) {
         if (!this.todos[deskId]) return;
-        this.todos[deskId] = this.todos[deskId].filter(t => !t.completed || t.immutable);
+        this.todos[deskId] = this.todos[deskId].filter(t => t.id !== taskId);
         this.save();
     }
 

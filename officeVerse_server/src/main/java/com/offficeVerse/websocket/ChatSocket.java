@@ -43,10 +43,10 @@ public class ChatSocket extends TextWebSocketHandler {
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         String payload = message.getPayload();
-        String[] parts = payload.split(":", 5); // expect up to 5 parts
 
         if (payload.startsWith("REGISTER:")) {
             // REGISTER:RoomID:PlayerID:PlayerName
+            String[] parts = payload.split(":", 4);
             if (parts.length >= 4) {
                 Long roomId = Long.parseLong(parts[1]);
                 Long playerId = Long.parseLong(parts[2]);
@@ -61,23 +61,29 @@ public class ChatSocket extends TextWebSocketHandler {
                 broadcastPlayerList(roomId);
             }
         } else if (payload.startsWith("GLOBAL:")) {
-            // GLOBAL:SenderID:Msg
-            if (parts.length >= 3) {
-                PlayerSessionInfo info = sessionInfo.get(session.getId());
-                if (info != null) {
-                    String senderId = parts[1];
-                    String text = parts[2];
+            // GLOBAL:SenderID:FullMsg
+            PlayerSessionInfo info = sessionInfo.get(session.getId());
+            if (info != null) {
+                int firstColon = payload.indexOf(':');
+                int secondColon = payload.indexOf(':', firstColon + 1);
+                if (firstColon != -1 && secondColon != -1) {
+                    String senderId = payload.substring(firstColon + 1, secondColon);
+                    String text = payload.substring(secondColon + 1);
                     broadcastToRoom(info.roomId, "GLOBAL:" + senderId + ":" + text);
                 }
             }
         } else if (payload.startsWith("PRIVATE:")) {
-            // PRIVATE:SenderID:TargetID:Msg
-            if (parts.length >= 4) {
-                PlayerSessionInfo info = sessionInfo.get(session.getId());
-                if (info != null) {
-                    String senderId = parts[1];
-                    Long targetId = Long.parseLong(parts[2]);
-                    String text = parts[3];
+            // PRIVATE:SenderID:TargetID:FullMsg
+            PlayerSessionInfo info = sessionInfo.get(session.getId());
+            if (info != null) {
+                int firstColon = payload.indexOf(':');
+                int secondColon = payload.indexOf(':', firstColon + 1);
+                int thirdColon = payload.indexOf(':', secondColon + 1);
+
+                if (firstColon != -1 && secondColon != -1 && thirdColon != -1) {
+                    String senderId = payload.substring(firstColon + 1, secondColon);
+                    Long targetId = Long.parseLong(payload.substring(secondColon + 1, thirdColon));
+                    String text = payload.substring(thirdColon + 1);
 
                     WebSocketSession targetSession = roomSessions.get(info.roomId).get(targetId);
                     if (targetSession != null && targetSession.isOpen()) {
@@ -90,57 +96,40 @@ public class ChatSocket extends TextWebSocketHandler {
                 }
             }
         } else if (payload.startsWith("VOICE_SIGNAL:")) {
-            // VOICE_SIGNAL:SenderID:TargetID:JsonPayload
-            // Relays WebRTC signaling data (Offer, Answer, ICE Candidates)
-            if (parts.length >= 4) {
-                PlayerSessionInfo info = sessionInfo.get(session.getId());
-                if (info != null) {
-                    String senderId = parts[1];
-                    Long targetId = Long.parseLong(parts[2]);
+            // VOICE_SIGNAL:SenderID:TargetID:Payload
+            PlayerSessionInfo info = sessionInfo.get(session.getId());
+            if (info != null) {
+                int firstColon = payload.indexOf(':');
+                int secondColon = payload.indexOf(':', firstColon + 1);
+                int thirdColon = payload.indexOf(':', secondColon + 1);
 
-                    int thirdColonIndex = -1;
-                    int colonsFound = 0;
-                    for (int i = 0; i < payload.length(); i++) {
-                        if (payload.charAt(i) == ':') {
-                            colonsFound++;
-                            if (colonsFound == 3) {
-                                thirdColonIndex = i;
-                                break;
-                            }
-                        }
-                    }
+                if (thirdColon != -1) {
+                    String senderId = payload.substring(firstColon + 1, secondColon);
+                    Long targetId = Long.parseLong(payload.substring(secondColon + 1, thirdColon));
+                    String signalPayload = payload.substring(thirdColon + 1);
 
-                    if (thirdColonIndex != -1) {
-                        String signalPayload = payload.substring(thirdColonIndex + 1);
-
-                        WebSocketSession targetSession = roomSessions.get(info.roomId).get(targetId);
-                        if (targetSession != null && targetSession.isOpen()) {
-                            // Forward to target: VOICE_SIGNAL:SenderID:Payload
-                            targetSession
-                                    .sendMessage(new TextMessage("VOICE_SIGNAL:" + senderId + ":" + signalPayload));
-                        }
+                    WebSocketSession targetSession = roomSessions.get(info.roomId).get(targetId);
+                    if (targetSession != null && targetSession.isOpen()) {
+                        targetSession.sendMessage(new TextMessage("VOICE_SIGNAL:" + senderId + ":" + signalPayload));
                     }
                 }
             }
         } else if (payload.startsWith("MEETING_JOIN:")) {
-            if (parts.length >= 3) {
-                PlayerSessionInfo info = sessionInfo.get(session.getId());
-                if (info != null) {
-                    meetingParticipants.computeIfAbsent(info.roomId, k -> ConcurrentHashMap.newKeySet())
-                            .add(info.playerId);
-                    broadcastToMeeting(info.roomId, "MEETING_USER_JOINED:" + info.playerId);
+            PlayerSessionInfo info = sessionInfo.get(session.getId());
+            if (info != null) {
+                meetingParticipants.computeIfAbsent(info.roomId, k -> ConcurrentHashMap.newKeySet()).add(info.playerId);
+                broadcastToMeeting(info.roomId, "MEETING_USER_JOINED:" + info.playerId);
 
-                    Set<Long> participants = meetingParticipants.get(info.roomId);
-                    String current = "";
-                    if (participants != null) {
-                        current = String.join(",",
-                                participants.stream()
-                                        .filter(id -> !id.equals(info.playerId))
-                                        .map(Object::toString)
-                                        .toArray(String[]::new));
-                    }
-                    session.sendMessage(new TextMessage("MEETING_LIST:" + current));
+                Set<Long> participants = meetingParticipants.get(info.roomId);
+                String current = "";
+                if (participants != null) {
+                    current = String.join(",",
+                            participants.stream()
+                                    .filter(id -> !id.equals(info.playerId))
+                                    .map(Object::toString)
+                                    .toArray(String[]::new));
                 }
+                session.sendMessage(new TextMessage("MEETING_LIST:" + current));
             }
         } else if (payload.startsWith("MEETING_LEAVE:")) {
             PlayerSessionInfo info = sessionInfo.get(session.getId());

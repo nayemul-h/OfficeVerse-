@@ -168,7 +168,6 @@
             <div id="todo-header">
                 <h2 id="todo-title">Desk d1 - To-Do List</h2>
                 <div class="todo-header-actions">
-                    <button id="clear-todo-btn" class="clear-btn" title="Clear completed tasks">🗑️ Clear</button>
                     <button id="close-todo-btn">&times;</button>
                 </div>
             </div>
@@ -211,11 +210,19 @@
                 <button id="close-boss-btn">&times;</button>
             </div>
             <div id="boss-panel-content">
-                <p class="boss-description">Assign a priority task to all employees. This task will appear on every desk
-                    and cannot be removed.</p>
+                <p class="boss-description">Assign a priority task to a specific desk or all employees.</p>
                 <div id="boss-input-area">
-                    <input type="text" id="boss-task-input" placeholder="Enter universal command..." maxlength="60">
-                    <button id="assign-boss-task-btn">Assign Task 📢</button>
+                    <select id="boss-desk-select" class="boss-desk-select">
+                        <option value="all">📢 All Desks</option>
+                        <option value="d1">Desk D1</option>
+                        <option value="d2">Desk D2</option>
+                        <option value="d3">Desk D3</option>
+                        <option value="d4">Desk D4</option>
+                        <option value="d5">Desk D5</option>
+                        <option value="d6">Desk D6</option>
+                    </select>
+                    <input type="text" id="boss-task-input" placeholder="Enter task..." maxlength="60">
+                    <button id="assign-boss-task-btn">Assign Task 📌</button>
                 </div>
 
                 <h3 class="boss-subtitle">Performance Monitor</h3>

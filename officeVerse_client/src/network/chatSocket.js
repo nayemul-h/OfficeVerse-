@@ -1,9 +1,8 @@
-import { WS_URL } from '../utils/config.js';
 
 let socket;
 
 export function connectChat(onMsg) {
-  socket = new WebSocket(`${WS_URL}/ws/chat`);
+  socket = new WebSocket("ws://localhost:8080/ws/chat");
   socket.onmessage = (e) => onMsg(e.data);
 }
 

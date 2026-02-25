@@ -1,7 +1,7 @@
 // ============================================
 // FILE: src/network/roomSocket.js
 // ============================================
-import { NETWORK_CONFIG } from '../utils/config.js';
+import { NETWORK_CONFIG } from '../utils/constants.js';
 
 /**
  * RoomSocket handles real-time room/lobby updates
