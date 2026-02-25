@@ -2,7 +2,7 @@ import * as Phaser from 'https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.
 import { connectMovement, sendMovement } from '../../network/movementSocket.js';
 import { initChat } from '../../network/ChatModule.js';
 import ZoneManager from '../map/ZoneManager.js';
-import MiniMap from '../ui/MiniMap.js';
+import MiniMap from '../ui/Minimap.js';
 import TodoManager from '../ui/TodoManager.js';
 import TodoUI from '../ui/TodoUI.js';
 import BossPanelUI from '../ui/BossPanelUI.js';
