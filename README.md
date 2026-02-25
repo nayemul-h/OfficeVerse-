@@ -1,12 +1,10 @@
-<div align="center">
+# 🏢 OfficeVerse
 
 ![OfficeVerse Hero Banner](assets/branding/scene.gif)
 
-# 🏢 OfficeVerse
+## **The Ultimate Multiplayer OfficeVerse**
 
-### **The Ultimate Multiplayer OfficeVerse**
-
-*Work, Collaborate, and Have Fun in Your Virtual Office!*
+_Work, Collaborate, and Have Fun in Your Virtual Office!_
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 ![Version](https://img.shields.io/badge/version-0.1.0--BETA-blueviolet)
@@ -15,8 +13,6 @@
 ![Vite](https://img.shields.io/badge/Frontend-Vite-646CFF?logo=vite)
 
 [Quick Start](#-quick-start) • [Features](#-epic-features) • [Controls](#-master-the-controls) • [Architecture](#-smart-architecture)
-
-</div>
 
 ---
 
@@ -38,14 +34,14 @@
 
 ## 🚀 Epic Features
 
-| Feature | The Vibe |
-|:---|:---|
-| 🗺️ **Living Office Map** | From the **Zen Garden** to the **Boss's Executive Suite**, every corner has a purpose. |
-| 👥 **Hyper-Sync Multiplayer** | Smooth movement and real-time synchronization that feels like magic. |
-| 💬 **Rich Communication** | Global chat, private whispers, and **P2P Voice Calls** for true connection. |
-| 🤖 **AI Assistant** | A context-aware Mistral AI companion ready to brainstsom with you. |
-| 📋 **Smart Desks** | Personal task management that stays where you left it. |
-| 📊 **Vitals Engine** | Manage your **Energy** ⚡ and **Stress** 😫 to stay at peak performance. |
+| Feature                       | The Vibe                                                                               |
+| :---------------------------- | :------------------------------------------------------------------------------------- |
+| 🗺️ **Living Office Map**      | From the **Zen Garden** to the **Boss's Executive Suite**, every corner has a purpose. |
+| 👥 **Hyper-Sync Multiplayer** | Smooth movement and real-time synchronization that feels like magic.                   |
+| 💬 **Rich Communication**     | Global chat, private whispers, and **P2P Voice Calls** for true connection.            |
+| 🤖 **AI Assistant**           | A context-aware Mistral AI companion ready to brainstorm with you.                     |
+| 📋 **Smart Desks**            | Personal task management that stays where you left it.                                 |
+| 📊 **Vitals Engine**          | Manage your **Energy** ⚡ and **Stress** 😫 to stay at peak performance.               |
 
 ---
 
@@ -58,7 +54,7 @@ graph TD
     A[Phaser Engine] --> B[Game Scenes]
     B --> C[OfficeScene - World Logic]
     B --> D[BootScene - Initialization]
-    
+
     subgraph "Modular UI Layer"
     E[LoginUI]
     F[TodoUI]
@@ -66,7 +62,7 @@ graph TD
     H[BossPanelUI]
     I[ExecutiveUI]
     end
-    
+
     C -.-> F
     C -.-> G
     C -.-> H
@@ -78,43 +74,25 @@ graph TD
 
 ## 🛠️ Tech Stack
 
-<table align="center">
-  <tr>
-    <td align="center" width="33%">
-      <b>Frontend</b><br>
-      Phaser 3.80<br>
-      Vite<br>
-      WebRTC (Voice)<br>
-      Tailored CSS
-    </td>
-    <td align="center" width="33%">
-      <b>Backend</b><br>
-      Spring Boot 4.0<br>
-      WebSockets<br>
-      Mistral AI<br>
-      H2 Database
-    </td>
-    <td align="center" width="33%">
-      <b>Security</b><br>
-      CORS Guard<br>
-      Input Sanitization<br>
-      Server-side Keys
-    </td>
-  </tr>
-</table>
+| Frontend       | Backend         | Security           |
+| :------------- | :-------------- | :----------------- |
+| Phaser 3.80    | Spring Boot 4.0 | CORS Guard         |
+| Vite           | WebSockets      | Input Sanitization |
+| WebRTC (Voice) | Mistral AI      | Server-side Keys   |
+| Tailored CSS   | H2 Database     |                    |
 
 ---
 
 ## 📦 Quick Start
 
-### 1️⃣ Fire up the Server
+### 1. Fire up the Server
 
 ```bash
 cd officeVerse_server
 gradle bootRun
 ```
 
-### 2️⃣ Launch the Client
+### 2. Launch the Client
 
 ```bash
 cd officeVerse_client
@@ -122,7 +100,7 @@ npm install
 npm run dev
 ```
 
-### 3️⃣ Enter the OfficeVerse
+### 3. Enter the OfficeVerse
 
 Open `http://localhost:5173` and start your new work life! 🚀
 
@@ -133,12 +111,12 @@ Open `http://localhost:5173` and start your new work life! 🚀
 > [!TIP]
 > Use the **Zen Room** (🧘) when your stress gets high to turn your avatar blue and find your inner peace!
 
-| Command | Action |
-|:---|:---|
+| Command         | Action                   |
+| :-------------- | :----------------------- |
 | `Arrows / WASD` | Navigate the OfficeVerse |
-| `F` | Interact with the World |
-| `E` | Chat with Colleagues |
-| `Enter` | Submit / Send |
+| `F`             | Interact with the World  |
+| `E`             | Chat with Colleagues     |
+| `Enter`         | Submit / Send            |
 
 ---
 
@@ -157,11 +135,11 @@ For detailed information, please refer to our manuals:
 
 We welcome contributions! Please follow these steps:
 
-1.  Fork the repository.
-2.  Create a feature branch (`git checkout -b feature/AmazingFeature`).
-3.  Commit your changes (`git commit -m 'Add some AmazingFeature'`).
-4.  Push to the branch (`git push origin feature/AmazingFeature`).
-5.  Open a Pull Request.
+1. Fork the repository.
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`).
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`).
+4. Push to the branch (`git push origin feature/AmazingFeature`).
+5. Open a Pull Request.
 
 ## 📄 License
 
@@ -169,13 +147,9 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 ---
 
-<div align="center">
-
 ### **Ready to redefine how you work?**
 
-[Documentation](./officeVerse_client/README.md) • [Issues](https://github.com/zoo-hair/ov/issues) • [Vision](#-vision)
+[Documentation](./UnderManual.md) • [Issues](https://github.com/zoo-hair/ov/issues)
 
 **Copyright © 2026 OfficeVerse Team**
-*Made with ❤️ and pixel dust.*
-
-</div>
+_Made with ❤️ and pixel dust._

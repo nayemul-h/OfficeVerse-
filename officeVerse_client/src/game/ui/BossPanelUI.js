@@ -13,9 +13,12 @@ export default class BossPanelUI {
 
         const input = document.getElementById('boss-task-input');
         if (input) {
-            input.onkeydown = (e) => {
+            // Prevent Phaser from capturing keys while typing
+            input.addEventListener('keydown', (e) => {
+                e.stopPropagation();
                 if (e.key === 'Enter') this.assignBossTask();
-            };
+            });
+            input.addEventListener('keyup', (e) => e.stopPropagation());
         }
 
         const deskBoxes = document.querySelectorAll('.desk-box');

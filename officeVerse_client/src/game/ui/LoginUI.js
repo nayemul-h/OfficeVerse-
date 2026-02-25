@@ -1,3 +1,5 @@
+import { WS_URL } from '../../utils/config.js';
+
 export default class LoginUI {
     constructor(scene) {
         this.scene = scene;
@@ -101,7 +103,7 @@ export default class LoginUI {
     }
 
     setupRoomSocket(createBtn, joinBtn) {
-        this.roomSocket = new WebSocket('ws://localhost:8080/rooms');
+        this.roomSocket = new WebSocket(`${WS_URL}/rooms`);
 
         this.roomSocket.onopen = () => {
             console.log('Room Socket Connected for Login');
@@ -117,7 +119,7 @@ export default class LoginUI {
 
         this.roomSocket.onerror = (err) => {
             console.error('Room Socket Error:', err);
-            this.showError('Failed to connect to the game server. Please ensure the backend is running at localhost:8080');
+            this.showError('Failed to connect to the game server. Please check your connection or try again later.');
             if (createBtn) createBtn.textContent = 'Connection Error';
             if (joinBtn) joinBtn.textContent = 'Connection Error';
         };

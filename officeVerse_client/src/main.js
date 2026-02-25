@@ -33,7 +33,4 @@ const config = {
 
 const game = new Phaser.Game(config);
 
-// Handle window resizing
-window.addEventListener('resize', () => {
-    game.scale.resize(window.innerWidth - 320, window.innerHeight);
-});
+// Manual resize listener removed to allow Phaser Scale.RESIZE to handle it seamlessly

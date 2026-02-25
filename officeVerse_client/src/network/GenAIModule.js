@@ -4,8 +4,9 @@
  */
 
 import { showAPIKeyModal, isGenAIConfigured } from './APIKeyModule.js';
+import { API_URL } from '../utils/config.js';
 
-const API_BASE_URL = 'http://localhost:8080/api/genai';
+const API_BASE_URL = `${API_URL}/api/genai`;
 
 /**
  * Send a prompt to the backend for processing by OpenAI

@@ -20,7 +20,7 @@
     <div id="login-screen" style="display: none;">
         <div id="login-form">
             <div class="login-badge">OfficeVerse</div>
-            
+
             <div class="login-card-inner">
                 <div class="login-tabs">
                     <button class="login-tab active" data-role="boss">Boss</button>
@@ -31,12 +31,14 @@
                 <div id="boss-form" class="role-form active">
                     <div class="input-group">
                         <label class="login-label">Enter Your Name</label>
-                        <input type="text" id="boss-name" class="login-input" maxlength="12" placeholder="e.g. Satoshi" required>
+                        <input type="text" id="boss-name" class="login-input" maxlength="12" placeholder="e.g. Satoshi"
+                            required>
                     </div>
 
                     <div class="input-group">
                         <label class="login-label">Office Name</label>
-                        <input type="text" id="office-name" class="login-input" maxlength="20" placeholder="e.g. The Moon Base">
+                        <input type="text" id="office-name" class="login-input" maxlength="20"
+                            placeholder="e.g. The Moon Base">
                     </div>
 
                     <button id="create-office-btn" class="login-btn">Create Office</button>
@@ -46,13 +48,14 @@
                 <div id="employee-form" class="role-form">
                     <div class="input-group">
                         <label class="login-label">Enter Your Name</label>
-                        <input type="text" id="employee-name" class="login-input" maxlength="12" placeholder="e.g. Vitalik" required>
+                        <input type="text" id="employee-name" class="login-input" maxlength="12"
+                            placeholder="e.g. Vitalik" required>
                     </div>
 
                     <div class="input-group">
                         <label class="login-label">Office Code</label>
-                        <input type="text" id="join-code" class="login-input" maxlength="6" style="text-transform: uppercase;"
-                            placeholder="6-DIGIT CODE">
+                        <input type="text" id="join-code" class="login-input" maxlength="6"
+                            style="text-transform: uppercase;" placeholder="6-DIGIT CODE">
                     </div>
 
                     <button id="join-office-btn" class="login-btn">Join Office</button>
@@ -89,7 +92,8 @@
                 <div id="skin-selection">
                     <label class="login-label center">Select Your Aura</label>
                     <div class="skin-options">
-                        <div class="skin-option selected" style="background-color: #ffffff;" data-color="0xffffff"></div>
+                        <div class="skin-option selected" style="background-color: #ffffff;" data-color="0xffffff">
+                        </div>
                         <div class="skin-option" style="background-color: #ff5555;" data-color="0xff5555"></div>
                         <div class="skin-option" style="background-color: #55ff55;" data-color="0x55ff55"></div>
                         <div class="skin-option" style="background-color: #5555ff;" data-color="0x5555ff"></div>
@@ -112,7 +116,8 @@
             <div class="code-container">
                 <span id="room-display-code">Code: ------</span>
                 <button id="copy-code-btn" class="copy-btn" title="Copy code to clipboard">
-                    <svg class="copy-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <svg class="copy-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
                         <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
                         <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
                     </svg>
@@ -153,7 +158,7 @@
         </div>
 
         <div id="chat-input-area">
-            <input id="chat-input-final" type="text" placeholder="Type a message..." maxlength="100">
+            <input id="chat-input-final" type="text" placeholder="Type a message..." maxlength="500">
         </div>
     </div>
 
@@ -263,9 +268,11 @@
             <!-- Panel Content -->
             <div id="genai-panel-content">
                 <!-- Chat History -->
-                <div id="genai-chat-history" class="genai-chat-history" role="log" aria-live="polite" aria-label="Chat history">
+                <div id="genai-chat-history" class="genai-chat-history" role="log" aria-live="polite"
+                    aria-label="Chat history">
                     <div class="genai-message system" role="status">
-                        <strong>Welcome!</strong> I'm powered by Mistral AI. Ask me questions, get advice, or brainstorm ideas!
+                        <strong>Welcome!</strong> I'm powered by Mistral AI. Ask me questions, get advice, or brainstorm
+                        ideas!
                     </div>
                 </div>
 
@@ -278,24 +285,13 @@
                 <!-- Input Area -->
                 <div id="genai-input-area" class="genai-input-area">
                     <div class="genai-input-wrapper">
-                        <input 
-                            type="text" 
-                            id="genai-input" 
-                            class="genai-input-field"
-                            placeholder="Ask me anything... (max 500 characters)" 
-                            maxlength="500"
-                            autocomplete="off"
-                            spellcheck="true"
-                            aria-label="Message input"
-                        >
+                        <input type="text" id="genai-input" class="genai-input-field"
+                            placeholder="Ask me anything... (max 500 characters)" maxlength="500" autocomplete="off"
+                            spellcheck="true" aria-label="Message input">
                         <span id="genai-char-count" class="genai-char-count">0/500</span>
                     </div>
-                    <button 
-                        id="genai-send-btn" 
-                        class="genai-send-button"
-                        title="Send message (Enter key works too)"
-                        aria-label="Send message"
-                    >
+                    <button id="genai-send-btn" class="genai-send-button" title="Send message (Enter key works too)"
+                        aria-label="Send message">
                         <span class="genai-send-icon">→</span>
                         <span>Send</span>
                     </button>
@@ -341,7 +337,8 @@
                         <span class="terminal-status success">✓ System Ready</span>
                     </div>
                     <div class="terminal-line" style="margin: 15px 0;">
-                        <span class="terminal-text-dim">════════════════════════════════════════════════════════════</span>
+                        <span
+                            class="terminal-text-dim">════════════════════════════════════════════════════════════</span>
                     </div>
                     <div class="terminal-line">
                         <span class="terminal-text-warning">⚠ AUTHORIZATION REQUIRED</span>
@@ -353,7 +350,8 @@
                         <span class="terminal-text-dim">Only Boss can authorize this configuration</span>
                     </div>
                     <div class="terminal-line" style="margin-top: 15px;">
-                        <span class="terminal-text-dim">════════════════════════════════════════════════════════════</span>
+                        <span
+                            class="terminal-text-dim">════════════════════════════════════════════════════════════</span>
                     </div>
                 </div>
 
@@ -365,21 +363,16 @@
                     </div>
                     <div class="terminal-input-wrapper">
                         <span class="terminal-prompt-inline">> </span>
-                        <input 
-                            type="password" 
-                            id="genai-apikey-input" 
-                            class="terminal-input-field"
-                            placeholder="sk-..." 
-                            autocomplete="off"
-                            aria-label="OpenAI API Key"
-                            spellcheck="false"
-                        >
-                        <button id="toggle-apikey-visibility" class="terminal-eye-btn" title="Show/Hide API Key">👁</button>
+                        <input type="password" id="genai-apikey-input" class="terminal-input-field" placeholder="sk-..."
+                            autocomplete="off" aria-label="OpenAI API Key" spellcheck="false">
+                        <button id="toggle-apikey-visibility" class="terminal-eye-btn"
+                            title="Show/Hide API Key">👁</button>
                     </div>
 
                     <!-- Terminal Commands -->
                     <div class="terminal-commands" style="margin-top: 15px;">
-                        <button id="validate-apikey-btn" class="terminal-cmd-btn validate-btn" title="Validate the API key">
+                        <button id="validate-apikey-btn" class="terminal-cmd-btn validate-btn"
+                            title="Validate the API key">
                             <span class="cmd-icon">→</span> validate
                         </button>
                         <button id="save-apikey-btn" class="terminal-cmd-btn save-btn" title="Save and activate">
@@ -391,7 +384,8 @@
                     </div>
 
                     <!-- Status Message -->
-                    <div id="apikey-status-message" class="terminal-status-line" style="display: none; margin-top: 15px;"></div>
+                    <div id="apikey-status-message" class="terminal-status-line"
+                        style="display: none; margin-top: 15px;"></div>
                 </div>
 
                 <!-- Help Section (Collapsible) -->
@@ -400,7 +394,8 @@
                         <span class="terminal-text-info">ℹ HELP DOCUMENTATION</span>
                     </div>
                     <div class="terminal-line">
-                        <span class="terminal-text">1. Visit: <span class="terminal-link">https://platform.openai.com/api-keys</span></span>
+                        <span class="terminal-text">1. Visit: <span
+                                class="terminal-link">https://platform.openai.com/api-keys</span></span>
                     </div>
                     <div class="terminal-line">
                         <span class="terminal-text">2. Sign in to your OpenAI account</span>
@@ -440,15 +435,15 @@
                         <div class="feature-name">Tech Blog</div>
                         <div class="feature-desc">Read latest tech news</div>
                     </button>
-                    <button id="feature-coming1" class="feature-btn coming-soon">
-                        <div class="feature-icon">🎯</div>
-                        <div class="feature-name">Coming Soon</div>
-                        <div class="feature-desc">Feature 2</div>
+                    <button id="feature-prothomalo" class="feature-btn">
+                        <div class="feature-icon">📰</div>
+                        <div class="feature-name">Prothom Alo</div>
+                        <div class="feature-desc">Bangladesh Newspaper</div>
                     </button>
-                    <button id="feature-coming2" class="feature-btn coming-soon">
-                        <div class="feature-icon">⭐</div>
-                        <div class="feature-name">Coming Soon</div>
-                        <div class="feature-desc">Feature 3</div>
+                    <button id="feature-kalerkantho" class="feature-btn">
+                        <div class="feature-icon">📰</div>
+                        <div class="feature-name">Kaler Kantho</div>
+                        <div class="feature-desc">Daily Newspaper</div>
                     </button>
                 </div>
             </div>
@@ -474,7 +469,7 @@
                         <span>Alternative movement keys</span>
                     </div>
                 </div>
-                
+
                 <div class="shortcut-section">
                     <h3>💬 Communication</h3>
                     <div class="shortcut-item">
@@ -486,7 +481,7 @@
                         <span>Send chat message</span>
                     </div>
                 </div>
-                
+
                 <div class="shortcut-section">
                     <h3>🛠️ Interactions</h3>
                     <div class="shortcut-item">

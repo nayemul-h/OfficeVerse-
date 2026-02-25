@@ -45,8 +45,10 @@ public class RoomSocket extends TextWebSocketHandler {
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         try {
+            @SuppressWarnings("unchecked")
             Map<String, Object> payload = objectMapper.readValue(message.getPayload(), Map.class);
             String type = (String) payload.get("type");
+            @SuppressWarnings("unchecked")
             Map<String, Object> data = (Map<String, Object>) payload.getOrDefault("data", new HashMap<>());
 
             switch (type) {

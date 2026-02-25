@@ -1,7 +1,8 @@
 import { VoiceManager } from './VoiceModule.js';
+import { WS_URL } from '../utils/config.js';
 
 export function initChat(playerId, playerName, roomId, roomDisplayCode) {
-    const socket = new WebSocket('ws://localhost:8080/chat');
+    const socket = new WebSocket(`${WS_URL}/chat`);
 
     // UI Elements
     const globalView = document.getElementById('view-global');
@@ -11,37 +12,58 @@ export function initChat(playerId, playerName, roomId, roomDisplayCode) {
 
     const voiceManager = new VoiceManager(socket, playerId,
         // onStatusChange
+        // onStatusChange
         (status, showHangup) => {
             const time = new Date().toLocaleTimeString();
-            let html = `<div class="msg-bubble system">VOICE: ${status} `;
+
+            // Check if we already have an active call bubble
+            const activeBubble = document.querySelector('.active-call-bubble');
 
             if (showHangup) {
+                // If we already have an active bubble, don't create another one
+                if (activeBubble) {
+                    const textSpan = activeBubble.querySelector('.msg-text-content');
+                    if (textSpan) textSpan.textContent = status;
+                    return;
+                }
+
                 const callId = Date.now();
-                html += `<button class="call-hangup-btn" data-id="${callId}" style="cursor:pointer; background:#f44336; color:white; border:none; padding:4px 8px; border-radius:4px; margin-left:10px">End Call ❌</button>`;
-                html += `<span style="font-size:0.8em; color:#888">(${time})</span></div>`;
+                const html = `<div class="msg-bubble system active-call-bubble" id="call-status-${callId}">
+                    VOICE: <span class="msg-text-content">${status}</span>
+                    <button class="call-hangup-btn" data-id="${callId}" style="cursor:pointer; background:#f44336; color:white; border:none; padding:4px 8px; border-radius:4px; margin-left:10px">End Call ❌</button>
+                    <span style="font-size:0.8em; color:#888">(${time})</span>
+                </div>`;
 
                 if (privateHistory) {
                     privateHistory.insertAdjacentHTML('beforeend', html);
                     privateHistory.scrollTop = privateHistory.scrollHeight;
 
                     setTimeout(() => {
-                        const bubble = privateHistory.lastElementChild;
+                        const bubble = document.getElementById(`call-status-${callId}`);
                         if (bubble) {
                             const btnEnd = bubble.querySelector('.call-hangup-btn');
                             if (btnEnd) {
                                 btnEnd.onclick = () => {
                                     voiceManager.endCall();
-                                    btnEnd.parentElement.innerHTML = `VOICE: Call ended. <span style="font-size:0.8em; color:#888">(${time})</span>`;
+                                    // UI update will happen when onStatusChange is called again with showHangup=false
                                 };
                             }
                         }
                     }, 0);
                 }
             } else {
-                html += `<span style="font-size:0.8em; color:#888">(${time})</span></div>`;
-                if (privateHistory) {
-                    privateHistory.insertAdjacentHTML('beforeend', html);
-                    privateHistory.scrollTop = privateHistory.scrollHeight;
+                // If pending/ended status
+                if (activeBubble) {
+                    // Update the existing bubble to show it ended
+                    activeBubble.classList.remove('active-call-bubble'); // No longer active
+                    activeBubble.innerHTML = `VOICE: ${status} <span style="font-size:0.8em; color:#888">(${time})</span>`;
+                } else {
+                    // Just a normal status message
+                    const html = `<div class="msg-bubble system">VOICE: ${status} <span style="font-size:0.8em; color:#888">(${time})</span></div>`;
+                    if (privateHistory) {
+                        privateHistory.insertAdjacentHTML('beforeend', html);
+                        privateHistory.scrollTop = privateHistory.scrollHeight;
+                    }
                 }
             }
         },
@@ -138,7 +160,17 @@ export function initChat(playerId, playerName, roomId, roomDisplayCode) {
         } else {
             const alignClass = (type === 'sent') ? 'sent' : 'received';
             // Safe encoding for text
-            const safeText = text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            let safeText = text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+            // Connect links
+            const urlRegex = /(https?:\/\/[^\s]+|www\.[^\s]+)/g;
+            safeText = safeText.replace(urlRegex, (url) => {
+                let href = url;
+                if (!href.startsWith('http')) {
+                    href = 'http://' + href;
+                }
+                return `<a href="${href}" target="_blank" style="color: #cceeff; text-decoration: underline; word-break: break-all;">${url}</a>`;
+            });
             html = `
                 <div class="msg-bubble ${alignClass}">
                     <span class="msg-sender">${senderName}</span>
@@ -358,6 +390,9 @@ export function initChat(playerId, playerName, roomId, roomDisplayCode) {
 
     // Also stop propagation on keyup to be safe
     chatInput.addEventListener('keyup', (e) => e.stopPropagation());
+
+    // Stop propagation on paste to ensure game doesn't catch it
+    chatInput.addEventListener('paste', (e) => e.stopPropagation());
 
     // Export function for interaction (E Key)
     window.selectPlayerForChat = function (targetId) {
