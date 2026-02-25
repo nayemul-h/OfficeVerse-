@@ -101,7 +101,8 @@ export default class LoginUI {
     }
 
     setupRoomSocket(createBtn, joinBtn) {
-        this.roomSocket = new WebSocket('ws://localhost:8080/rooms');
+        const wsUrl = import.meta.env.VITE_WS_URL || 'ws://localhost:8080';
+        this.roomSocket = new WebSocket(`${wsUrl}/rooms`);
 
         this.roomSocket.onopen = () => {
             console.log('Room Socket Connected for Login');
@@ -117,7 +118,7 @@ export default class LoginUI {
 
         this.roomSocket.onerror = (err) => {
             console.error('Room Socket Error:', err);
-            this.showError('Failed to connect to the game server. Please ensure the backend is running at localhost:8080');
+            this.showError('Failed to connect to the game server. Please try again later.');
             if (createBtn) createBtn.textContent = 'Connection Error';
             if (joinBtn) joinBtn.textContent = 'Connection Error';
         };
