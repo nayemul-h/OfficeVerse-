@@ -1,4 +1,4 @@
-import { NETWORK_CONFIG } from '../utils/config.js';
+import { NETWORK_CONFIG } from '../utils/constants.js';
 
 /**
  * WebSocket for zone interactions
