@@ -6,17 +6,22 @@
 
 _Work, Collaborate, and Have Fun in Your Virtual Office!_
 
+[![🚀 Live Demo](https://img.shields.io/badge/🚀_Live_Demo-officeverse.netlify.app-4a90e2?style=for-the-badge)](https://officeverse.netlify.app/)
+[![GitHub](https://img.shields.io/badge/GitHub-zoo--hair%2FOfficeVerse-181717?style=for-the-badge&logo=github)](https://github.com/zoo-hair/OfficeVerse-)
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 ![Version](https://img.shields.io/badge/version-0.1.0--BETA-blueviolet)
 ![Phaser](https://img.shields.io/badge/Engine-Phaser%203.80-FF69B4)
 ![Spring Boot](https://img.shields.io/badge/Backend-Spring%20Boot-6DB33F?logo=springboot)
 ![Vite](https://img.shields.io/badge/Frontend-Vite-646CFF?logo=vite)
 
-[Quick Start](#-quick-start) • [Features](#-epic-features) • [Controls](#-master-the-controls) • [Architecture](#-smart-architecture)
+[Live Demo](#live-demo) • [Quick Start](#quick-start) • [Features](#features) • [Controls](#controls) • [Architecture](#architecture)
 
 ---
 
-## 🎮 What is OfficeVerse?
+## Live Demo
+
+> **Access OfficeVerse here →** [https://officeverse.netlify.app/](https://officeverse.netlify.app/)
 
 **OfficeVerse** isn't just another productivity tool—it's a living, breathing digital ecosystem. It transforms the mundane remote work experience into a vibrant, interactive pixel world.
 
@@ -97,10 +102,7 @@ gradle bootRun
 ```bash
 cd officeVerse_client
 npm install
-npm run dev
 ```
-
-### 3. Enter the OfficeVerse
 
 Open `http://localhost:5173` and start your new work life! 🚀
 
@@ -149,7 +151,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 ### **Ready to redefine how you work?**
 
-[Documentation](./UnderManual.md) • [Issues](https://github.com/zoo-hair/ov/issues)
+[User Manual](./UserManual.md) • [Issues](https://github.com/zoo-hair/ov/issues)
 
 **Copyright © 2026 OfficeVerse Team**
 _Made with ❤️ and pixel dust._

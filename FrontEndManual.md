@@ -1,21 +1,27 @@
 # OfficeVerse Frontend Manual
 
 ## Overview
+
 The OfficeVerse frontend is a 2D virtual office game built with **Phaser 3** and **JavaScript** (ES Modules), served using **Vite**. It features real-time multiplayer movement, chat, and various interactive zones.
 
+> **Live Demo**: [https://officeverse.netlify.app/](https://officeverse.netlify.app/)
+
 ## Technology Stack
+
 - **Framework**: Phaser 3.60.0
 - **Build Tool**: Vite 5.0.0
 - **Language**: JavaScript (ES Modules)
 - **Styling**: CSS (in `styles/`)
 
 ## Prerequisites
+
 - **Node.js** (LTS recommended)
 - **npm** (comes with Node.js)
 
 ## Setup and Installation
 
 1.  **Navigate to the Client Directory**
+
     ```bash
     cd ov/officeVerse_client
     ```
@@ -46,6 +52,7 @@ npm run build
 The output will be in the `dist` directory.
 
 ## Project Structure
+
 - `src/main.js`: Entry point.
 - `src/game/Game.js`: Main Phaser Game configuration.
 - `src/game/scenes/`: Contains all game scenes (Boot, Preload, Office, UI).
@@ -55,6 +62,7 @@ The output will be in the `dist` directory.
 - `src/styles/`: CSS files.
 
 ## Features
+
 - **Multiplayer**: Real-time movement synchronization using WebSockets.
 - **Interactive Zones**:
   - **Desks**: Personal Todo lists.
@@ -62,5 +70,4 @@ The output will be in the `dist` directory.
   - **Zen Room**: Stress reduction.
   - **Coffee Station**: Energy restoration.
   - **GenAI**: AI Assistant integration.
-  - **Gaming**: Mini-games.
 - **Role-Based Access**: Specialized zones for Boss/Executive roles.
