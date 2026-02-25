@@ -101,7 +101,10 @@ export default class LoginUI {
     }
 
     setupRoomSocket(createBtn, joinBtn) {
-        const wsUrl = import.meta.env.VITE_WS_URL || 'ws://localhost:8080';
+        let wsUrl = import.meta.env.VITE_WS_URL || 'ws://localhost:8080';
+        if (location.protocol === 'https:' && wsUrl.startsWith('ws://')) {
+            wsUrl = 'wss://' + wsUrl.slice(5);
+        }
         this.roomSocket = new WebSocket(`${wsUrl}/rooms`);
 
         this.roomSocket.onopen = () => {
