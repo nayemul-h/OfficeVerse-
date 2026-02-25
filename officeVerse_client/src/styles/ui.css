@@ -309,6 +309,66 @@ body {
     border: 2px solid #4ade80 !important;
 }
 
+/* Credit Footer */
+#login-credit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding: 10px 16px;
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 100px;
+    font-size: 0.78rem;
+    color: rgba(255, 255, 255, 0.45);
+}
+
+#login-credit strong {
+    color: rgba(255, 255, 255, 0.75);
+    font-weight: 700;
+}
+
+#credit-github-link,
+#credit-star-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 12px;
+    border-radius: 100px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.78rem;
+    transition: all 0.25s ease;
+}
+
+#credit-github-link {
+    background: rgba(255, 255, 255, 0.07);
+    color: rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#credit-github-link:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    transform: translateY(-1px);
+}
+
+#credit-star-btn {
+    background: rgba(255, 200, 40, 0.12);
+    color: #ffd700;
+    border: 1px solid rgba(255, 200, 40, 0.25);
+}
+
+#credit-star-btn:hover {
+    background: rgba(255, 200, 40, 0.25);
+    color: #ffe55c;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255, 200, 40, 0.2);
+}
+
+
 /* Copy Code Button */
 .code-container {
     display: flex;
