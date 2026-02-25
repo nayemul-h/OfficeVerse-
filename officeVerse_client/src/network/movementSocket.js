@@ -2,7 +2,8 @@ let socket;
 let scene;
 export function connectMovement(gameScene, onMessage) {
   scene = gameScene;
-  socket = new WebSocket("ws://localhost:8080/movement");
+  const wsUrl = import.meta.env.VITE_WS_URL || "ws://localhost:8080";
+  socket = new WebSocket(`${wsUrl}/movement`);
   socket.onmessage = (e) => {
     if (onMessage) onMessage(e.data);
   };

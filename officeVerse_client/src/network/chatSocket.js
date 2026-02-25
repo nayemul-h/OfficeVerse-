@@ -2,7 +2,8 @@
 let socket;
 
 export function connectChat(onMsg) {
-  socket = new WebSocket("ws://localhost:8080/ws/chat");
+  const wsUrl = import.meta.env.VITE_WS_URL || "ws://localhost:8080";
+  socket = new WebSocket(`${wsUrl}/ws/chat`);
   socket.onmessage = (e) => onMsg(e.data);
 }
 

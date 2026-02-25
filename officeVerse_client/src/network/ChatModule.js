@@ -1,7 +1,8 @@
 import { VoiceManager } from './VoiceModule.js';
 
 export function initChat(playerId, playerName, roomId, roomDisplayCode) {
-    const socket = new WebSocket('ws://localhost:8080/chat');
+    const wsUrl = import.meta.env.VITE_WS_URL || 'ws://localhost:8080';
+    const socket = new WebSocket(`${wsUrl}/chat`);
 
     // UI Elements
     const globalView = document.getElementById('view-global');
