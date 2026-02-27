@@ -34,10 +34,8 @@ public class ZoneSocket extends TextWebSocketHandler {
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         try {
-            @SuppressWarnings("unchecked")
             Map<String, Object> payload = objectMapper.readValue(message.getPayload(), Map.class);
             String type = (String) payload.get("type");
-            @SuppressWarnings("unchecked")
             Map<String, Object> data = (Map<String, Object>) payload.get("data");
 
             switch (type) {
@@ -47,20 +45,18 @@ public class ZoneSocket extends TextWebSocketHandler {
                 case "enterZone":
                     handleEnterZone(session, data);
                     break;
-                /*
-                 * case "exitZone":
-                 * handleExitZone(session, data);
-                 * break;
-                 * case "zoneInteraction":
-                 * handleZoneInteraction(session, data);
-                 * break;
-                 * case "requestMeeting":
-                 * handleRequestMeeting(session, data);
-                 * break;
-                 * case "aiPrompt":
-                 * handleAIPrompt(session, data);
-                 * break;
-                 */
+              /*  case "exitZone":
+                    handleExitZone(session, data);
+                    break;
+                case "zoneInteraction":
+                    handleZoneInteraction(session, data);
+                    break;
+                case "requestMeeting":
+                    handleRequestMeeting(session, data);
+                    break;
+                case "aiPrompt":
+                    handleAIPrompt(session, data);
+                    break; */
                 default:
                     System.out.println("Unknown zone message type: " + type);
             }
@@ -105,6 +101,21 @@ public class ZoneSocket extends TextWebSocketHandler {
         // For now, just log it
     }
 
+    private void broadcastToRoom(Long roomId, String message, String excludeSessionId) {
+        Set<WebSocketSession> sessions = roomSessions.get(roomId);
+        if (sessions != null) {
+            for (WebSocketSession s : sessions) {
+                if (s.isOpen() && !s.getId().equals(excludeSessionId)) {
+                    try {
+                        s.sendMessage(new TextMessage(message));
+                    } catch (Exception e) {
+                        System.err.println("Error broadcasting to room: " + e.getMessage());
+                    }
+                }
+            }
+        }
+    }
+
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         System.out.println("Zone WebSocket disconnected: " + session.getId());
@@ -122,9 +133,13 @@ public class ZoneSocket extends TextWebSocketHandler {
     }
 
     private static class ZonePlayerInfo {
+        Long playerId;
+        String playerName;
         Long roomId;
 
         ZonePlayerInfo(Long playerId, String playerName, Long roomId) {
+            this.playerId = playerId;
+            this.playerName = playerName;
             this.roomId = roomId;
         }
     }

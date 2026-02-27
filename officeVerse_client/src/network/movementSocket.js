@@ -1,10 +1,10 @@
-import { WS_URL } from '../utils/config.js';
-
 let socket;
 let scene;
 export function connectMovement(gameScene, onMessage) {
   scene = gameScene;
-  socket = new WebSocket(`${WS_URL}/movement`);
+  let wsUrl = import.meta.env.VITE_WS_URL || "ws://localhost:8080";
+  if (location.protocol === 'https:' && wsUrl.startsWith('ws://')) wsUrl = 'wss://' + wsUrl.slice(5);
+  socket = new WebSocket(`${wsUrl}/movement`);
   socket.onmessage = (e) => {
     if (onMessage) onMessage(e.data);
   };

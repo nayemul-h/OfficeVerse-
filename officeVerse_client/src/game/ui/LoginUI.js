@@ -1,5 +1,3 @@
-import { WS_URL } from '../../utils/config.js';
-
 export default class LoginUI {
     constructor(scene) {
         this.scene = scene;
@@ -103,7 +101,11 @@ export default class LoginUI {
     }
 
     setupRoomSocket(createBtn, joinBtn) {
-        this.roomSocket = new WebSocket(`${WS_URL}/rooms`);
+        let wsUrl = import.meta.env.VITE_WS_URL || 'ws://localhost:8080';
+        if (location.protocol === 'https:' && wsUrl.startsWith('ws://')) {
+            wsUrl = 'wss://' + wsUrl.slice(5);
+        }
+        this.roomSocket = new WebSocket(`${wsUrl}/rooms`);
 
         this.roomSocket.onopen = () => {
             console.log('Room Socket Connected for Login');
@@ -119,7 +121,7 @@ export default class LoginUI {
 
         this.roomSocket.onerror = (err) => {
             console.error('Room Socket Error:', err);
-            this.showError('Failed to connect to the game server. Please check your connection or try again later.');
+            this.showError('Failed to connect to the game server. Please try again later.');
             if (createBtn) createBtn.textContent = 'Connection Error';
             if (joinBtn) joinBtn.textContent = 'Connection Error';
         };

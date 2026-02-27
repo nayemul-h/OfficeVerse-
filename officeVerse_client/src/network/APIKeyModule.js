@@ -4,9 +4,7 @@
  * Terminal UI interface
  */
 
-import { API_URL } from '../utils/config.js';
-
-const API_BASE_URL = `${API_URL}/api/genai`;
+const API_BASE_URL = `${import.meta.env.VITE_API_URL || 'http://localhost:8080'}/api/genai`;
 
 // Store API key in session storage
 let cachedApiKey = null;

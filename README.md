@@ -1,10 +1,15 @@
 # 🏢 OfficeVerse
 
-![OfficeVerse Hero Banner](assets/branding/scene.gif)
-
-## **The Ultimate Multiplayer OfficeVerse**
+<div align="center">
+  <img src="assets/branding/officeverse_logo.png" alt="OfficeVerse Logo" width="400"/>
+  <br/><br/>
+  <img src="assets/branding/scene.gif" alt="OfficeVerse Hero Banner" width="100%"/>
+</div>
 
 _Work, Collaborate, and Have Fun in Your Virtual Office!_
+
+[![🚀 Live Demo](https://img.shields.io/badge/🚀_Live_Demo-officeverse.netlify.app-4a90e2?style=for-the-badge)](https://officeverse.netlify.app/)
+[![GitHub](https://img.shields.io/badge/GitHub-zoo--hair%2FOfficeVerse-181717?style=for-the-badge&logo=github)](https://github.com/zoo-hair/OfficeVerse-)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 ![Version](https://img.shields.io/badge/version-0.1.0--BETA-blueviolet)
@@ -12,11 +17,13 @@ _Work, Collaborate, and Have Fun in Your Virtual Office!_
 ![Spring Boot](https://img.shields.io/badge/Backend-Spring%20Boot-6DB33F?logo=springboot)
 ![Vite](https://img.shields.io/badge/Frontend-Vite-646CFF?logo=vite)
 
-[Quick Start](#-quick-start) • [Features](#-epic-features) • [Controls](#-master-the-controls) • [Architecture](#-smart-architecture)
+[Live Demo](#live-demo) • [Quick Start](#quick-start) • [Features](#features) • [Controls](#controls) • [Architecture](#architecture)
 
 ---
 
-## 🎮 What is OfficeVerse?
+## Live Demo
+
+> **Access OfficeVerse here →** [https://officeverse.netlify.app/](https://officeverse.netlify.app/)
 
 **OfficeVerse** isn't just another productivity tool—it's a living, breathing digital ecosystem. It transforms the mundane remote work experience into a vibrant, interactive pixel world.
 
@@ -97,10 +104,7 @@ gradle bootRun
 ```bash
 cd officeVerse_client
 npm install
-npm run dev
 ```
-
-### 3. Enter the OfficeVerse
 
 Open `http://localhost:5173` and start your new work life! 🚀
 
@@ -141,6 +145,46 @@ We welcome contributions! Please follow these steps:
 4. Push to the branch (`git push origin feature/AmazingFeature`).
 5. Open a Pull Request.
 
+## 🤝 Meet The Team Alpha 
+
+<div align="center">
+  <br/>
+  <a href="https://github.com/zoo-hair">
+    <img src="https://github.com/zoo-hair.png?size=150" width="130" height="130" alt="Juhair Islam Sami"/>
+  </a>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <a href="https://github.com/HEISENBERG1792">
+    <img src="https://github.com/HEISENBERG1792.png?size=150" width="130" height="130" alt="Abrar Khan"/>
+  </a>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <a href="https://github.com/nayemul-h">
+    <img src="https://github.com/nayemul-h.png?size=150" width="130" height="130" alt="Md Nayemul Hasan"/>
+  </a>
+  <br/>
+  <br/>
+
+  <table>
+    <tr>
+      <td align="center" width="200">
+        <b>💻 <a href="https://github.com/zoo-hair">Juhair Islam Sami</a></b><br/>
+        <i>"The Architect"</i>
+      </td>
+      <td align="center" width="200">
+        <b>🚀 <a href="https://github.com/HEISENBERG1792">Abrar Khan</a></b><br/>
+        <i>"The Optimizer"</i>
+      </td>
+      <td align="center" width="200">
+        <b>💡 <a href="https://github.com/nayemul-h">Md Nayemul Hasan</a></b><br/>
+        <i>"The Visionary"</i>
+      </td>
+    </tr>
+  </table>
+  <br/>
+  <p>
+    <img src="https://capsule-render.vercel.app/api?type=waving&color=timeGradient&height=80&section=footer&text=We%20build%20cool%20things%20🚀&fontSize=20&fontAlignY=30&animation=fadeIn" alt="footer"/>
+  </p>
+</div>
+
 ## 📄 License
 
 Distributed under the MIT License. See `LICENSE` for more information.
@@ -149,7 +193,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 ### **Ready to redefine how you work?**
 
-[Documentation](./UnderManual.md) • [Issues](https://github.com/zoo-hair/ov/issues)
+[User Manual](./UserManual.md) • [Issues](https://github.com/zoo-hair/ov/issues)
 
 **Copyright © 2026 OfficeVerse Team**
 _Made with ❤️ and pixel dust._

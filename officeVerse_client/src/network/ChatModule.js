@@ -1,8 +1,9 @@
 import { VoiceManager } from './VoiceModule.js';
-import { WS_URL } from '../utils/config.js';
 
 export function initChat(playerId, playerName, roomId, roomDisplayCode) {
-    const socket = new WebSocket(`${WS_URL}/chat`);
+    let wsUrl = import.meta.env.VITE_WS_URL || 'ws://localhost:8080';
+    if (location.protocol === 'https:' && wsUrl.startsWith('ws://')) wsUrl = 'wss://' + wsUrl.slice(5);
+    const socket = new WebSocket(`${wsUrl}/chat`);
 
     // UI Elements
     const globalView = document.getElementById('view-global');
@@ -270,24 +271,54 @@ export function initChat(playerId, playerName, roomId, roomDisplayCode) {
 
     socket.onmessage = (event) => {
         const data = event.data;
-        const parts = data.split(':', 3); // Type:Sender:Msg or Type:Data
 
         if (data.startsWith("GLOBAL:")) {
-            // GLOBAL:SenderID:Msg
-            const sender = parts[1];
-            const msg = parts[2];
+            // Extract sender and full message without truncation
+            // Format: GLOBAL:senderID:fullMessagePayload
+            const firstColon = data.indexOf(':');
+            const secondColon = data.indexOf(':', firstColon + 1);
+            if (firstColon === -1 || secondColon === -1) return;
 
-            // Boss Task Logic
-            if (msg.startsWith('BOSS_TASK:')) {
-                const taskText = msg.substring(10);
-                if (window.handleBossTaskReceived) window.handleBossTaskReceived(taskText);
-                return; // Don't show in chat history
+            const sender = data.substring(firstColon + 1, secondColon);
+            const msg = data.substring(secondColon + 1); // full payload, no truncation
+
+            // --- Boss Task REMOVE (employees only — skip if sender is self) ---
+            if (msg.startsWith('BOSS_TASK_REMOVE:')) {
+                if (sender == playerId) return; // boss already removed it locally
+                // Format: BOSS_TASK_REMOVE:deskId:taskId
+                const payload = msg.substring(17);
+                const colonIdx = payload.indexOf(':');
+                if (colonIdx !== -1) {
+                    const deskId = payload.substring(0, colonIdx);
+                    const taskId = payload.substring(colonIdx + 1);
+                    if (window.handleBossTaskRemoved) window.handleBossTaskRemoved(deskId, taskId);
+                }
+                return;
+            }
+
+            // --- Boss Task ASSIGN (employees only — skip if sender is self) ---
+            if (msg.startsWith('BOSS_TASK_ASSIGN:')) {
+                if (sender == playerId) return; // boss already added it locally
+                // Format: BOSS_TASK_ASSIGN:deskId:taskId:text
+                //   deskId='all' => taskId is "d1=111,d2=222,..."
+                //   deskId='d1'  => taskId is a single number
+                const payload = msg.substring(17); // after 'BOSS_TASK_ASSIGN:'
+                const c1 = payload.indexOf(':');
+                if (c1 === -1) return;
+                const deskId = payload.substring(0, c1);
+                const rest = payload.substring(c1 + 1);
+                const c2 = rest.indexOf(':');
+                if (c2 === -1) return;
+                const taskId = rest.substring(0, c2);
+                const taskText = rest.substring(c2 + 1);
+                if (window.handleBossTaskReceived) window.handleBossTaskReceived(deskId, taskId, taskText);
+                return;
             }
 
             // Bonus Rain Logic
             if (msg === 'BONUS_RAIN') {
                 if (window.handleBonusRainReceived) window.handleBonusRainReceived();
-                return; // Don't show in chat history
+                return;
             }
 
             const senderName = playerNamesMap[sender] || sender;
@@ -303,15 +334,18 @@ export function initChat(playerId, playerName, roomId, roomDisplayCode) {
             }
 
         } else if (data.startsWith("PRIVATE:")) {
-            // PRIVATE:SenderID:Msg OR PRIVATE:To Target:Msg
-            const sender = parts[1];
-            const msg = parts[2];
+            // PRIVATE:SenderID:Msg — extract without truncation
+            const firstColon = data.indexOf(':');
+            const secondColon = data.indexOf(':', firstColon + 1);
+            if (firstColon === -1 || secondColon === -1) return;
+
+            const sender = data.substring(firstColon + 1, secondColon);
+            const msg = data.substring(secondColon + 1);
 
             let displaySender = sender;
             let type = 'received';
 
             if (sender.startsWith("To ")) {
-                const targetId = sender.substring(3);
                 displaySender = "You";
                 type = 'sent';
             } else {
@@ -325,6 +359,7 @@ export function initChat(playerId, playerName, roomId, roomDisplayCode) {
                 const tab = document.querySelector('.chat-tab[data-tab="private"]');
                 if (tab) tab.classList.add('unread');
             }
+
 
         } else if (data.startsWith("PLAYER_LIST:")) {
             const listStr = data.substring(12); // Remove "PLAYER_LIST:"
@@ -353,8 +388,13 @@ export function initChat(playerId, playerName, roomId, roomDisplayCode) {
     window.sendGlobalMessage = (text) => {
         if (socket.readyState === WebSocket.OPEN) {
             socket.send(`GLOBAL:${playerId}:${text}`);
-            // Also show in local history
-            createBubble(globalHistory, text, 'self', 'Me');
+            // Only show in chat history for real chat messages, not system messages
+            const isSystemMsg = text.startsWith('BOSS_TASK_ASSIGN:') ||
+                text.startsWith('BOSS_TASK_REMOVE:') ||
+                text === 'BONUS_RAIN';
+            if (!isSystemMsg) {
+                createBubble(globalHistory, text, 'self', 'Me');
+            }
         }
     };
 
