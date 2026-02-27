@@ -143,6 +143,46 @@ We welcome contributions! Please follow these steps:
 4. Push to the branch (`git push origin feature/AmazingFeature`).
 5. Open a Pull Request.
 
+## 🤝 Meet The Squad 
+
+<div align="center">
+  <br/>
+  <a href="https://github.com/zoo-hair">
+    <img src="https://images.weserv.nl/?url=avatars.githubusercontent.com/u/84100650?v=4&h=150&w=150&fit=cover&mask=circle&maxage=7d" width="130px;" alt="Juhair Islam Sami"/>
+  </a>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <a href="https://github.com/HEISENBERG1792">
+    <img src="https://images.weserv.nl/?url=avatars.githubusercontent.com/u/104683057?v=4&h=150&w=150&fit=cover&mask=circle&maxage=7d" width="130px;" alt="Abrar Khan"/>
+  </a>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <a href="https://github.com/nayemul-h">
+    <img src="https://images.weserv.nl/?url=avatars.githubusercontent.com/u/90604104?v=4&h=150&w=150&fit=cover&mask=circle&maxage=7d" width="130px;" alt="Md Nayemul Hasan"/>
+  </a>
+  <br/>
+  <br/>
+
+  <table>
+    <tr>
+      <td align="center" width="200">
+        <b>💻 <a href="https://github.com/zoo-hair">Juhair Islam Sami</a></b><br/>
+        <i>"The Architect"</i>
+      </td>
+      <td align="center" width="200">
+        <b>🚀 <a href="https://github.com/HEISENBERG1792">Abrar Khan</a></b><br/>
+        <i>"The Optimizer"</i>
+      </td>
+      <td align="center" width="200">
+        <b>💡 <a href="https://github.com/nayemul-h">Md Nayemul Hasan</a></b><br/>
+        <i>"The Visionary"</i>
+      </td>
+    </tr>
+  </table>
+  <br/>
+  <p>
+    <img src="https://capsule-render.vercel.app/api?type=waving&color=timeGradient&height=80&section=footer&text=We%20build%20cool%20things%20🚀&fontSize=20&fontAlignY=30&animation=fadeIn" alt="footer"/>
+  </p>
+</div>
+
 ## 📄 License
 
 Distributed under the MIT License. See `LICENSE` for more information.
