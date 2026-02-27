@@ -1,8 +1,10 @@
 # 🏢 OfficeVerse
 
-![OfficeVerse Hero Banner](assets/branding/scene.gif)
-
-## **The Ultimate Multiplayer OfficeVerse**
+<div align="center">
+  <img src="assets/branding/officeverse_logo.png" alt="OfficeVerse Logo" width="400"/>
+  <br/><br/>
+  <img src="assets/branding/scene.gif" alt="OfficeVerse Hero Banner" width="100%"/>
+</div>
 
 _Work, Collaborate, and Have Fun in Your Virtual Office!_
 
