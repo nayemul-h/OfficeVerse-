@@ -143,20 +143,20 @@ We welcome contributions! Please follow these steps:
 4. Push to the branch (`git push origin feature/AmazingFeature`).
 5. Open a Pull Request.
 
-## 🤝 Meet The Squad 
+## 🤝 Meet The Team Alpha 
 
 <div align="center">
   <br/>
   <a href="https://github.com/zoo-hair">
-    <img src="https://images.weserv.nl/?url=avatars.githubusercontent.com/u/84100650?v=4&h=150&w=150&fit=cover&mask=circle&maxage=7d" width="130px;" alt="Juhair Islam Sami"/>
+    <img src="https://github.com/zoo-hair.png?size=150" width="130" height="130" alt="Juhair Islam Sami"/>
   </a>
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <a href="https://github.com/HEISENBERG1792">
-    <img src="https://images.weserv.nl/?url=avatars.githubusercontent.com/u/104683057?v=4&h=150&w=150&fit=cover&mask=circle&maxage=7d" width="130px;" alt="Abrar Khan"/>
+    <img src="https://github.com/HEISENBERG1792.png?size=150" width="130" height="130" alt="Abrar Khan"/>
   </a>
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <a href="https://github.com/nayemul-h">
-    <img src="https://images.weserv.nl/?url=avatars.githubusercontent.com/u/90604104?v=4&h=150&w=150&fit=cover&mask=circle&maxage=7d" width="130px;" alt="Md Nayemul Hasan"/>
+    <img src="https://github.com/nayemul-h.png?size=150" width="130" height="130" alt="Md Nayemul Hasan"/>
   </a>
   <br/>
   <br/>
